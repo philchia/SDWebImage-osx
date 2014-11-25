@@ -6,14 +6,14 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface UIImage (GIF)
+@interface NSImage (GIF)
 
-+ (UIImage *)sd_animatedGIFNamed:(NSString *)name;
++ (NSImage *)sd_animatedGIFNamed:(NSString *)name;
 
-+ (UIImage *)sd_animatedGIFWithData:(NSData *)data;
++ (NSImage *)sd_animatedGIFWithData:(NSData *)data;
 
-- (UIImage *)sd_animatedImageByScalingAndCroppingToSize:(CGSize)size;
+- (NSImage *)sd_animatedImageByScalingAndCroppingToSize:(CGSize)size;
 
 @end

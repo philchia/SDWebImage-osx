@@ -147,7 +147,7 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
         return;
     }
 
-    [self.memCache setObject:image forKey:key cost:image.size.height * image.size.width * image.scale * image.scale];
+    [self.memCache setObject:image forKey:key cost:image.size.height * image.size.width];
 
     if (toDisk) {
         dispatch_async(self.ioQueue, ^{
@@ -234,7 +234,7 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
     // Second check the disk cache...
     UIImage *diskImage = [self diskImageForKey:key];
     if (diskImage) {
-        CGFloat cost = diskImage.size.height * diskImage.size.width * diskImage.scale * diskImage.scale;
+        CGFloat cost = diskImage.size.height * diskImage.size.width;
         [self.memCache setObject:diskImage forKey:key cost:cost];
     }
 
@@ -302,7 +302,7 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
         @autoreleasepool {
             UIImage *diskImage = [self diskImageForKey:key];
             if (diskImage) {
-                CGFloat cost = diskImage.size.height * diskImage.size.width * diskImage.scale * diskImage.scale;
+                CGFloat cost = diskImage.size.height * diskImage.size.width;
                 [self.memCache setObject:diskImage forKey:key cost:cost];
             }
 
@@ -467,18 +467,8 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
 }
 
 - (void)backgroundCleanDisk {
-    UIApplication *application = [UIApplication sharedApplication];
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        // Clean up any unfinished task business by marking where you
-        // stopped or ending the task outright.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-
     // Start the long-running task and return immediately.
     [self cleanDiskWithCompletionBlock:^{
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
     }];
 }
 

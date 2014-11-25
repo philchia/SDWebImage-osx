@@ -13,22 +13,12 @@
 #error SDWebImage does not support Objective-C Garbage Collection
 #endif
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-#error SDWebImage doesn't support Deployement Target version < 5.0
-#endif
-
-#if !TARGET_OS_IPHONE
 #import <AppKit/AppKit.h>
 #ifndef UIImage
 #define UIImage NSImage
 #endif
 #ifndef UIImageView
 #define UIImageView NSImageView
-#endif
-#else
-
-#import <UIKit/UIKit.h>
-
 #endif
 
 #ifndef NS_ENUM

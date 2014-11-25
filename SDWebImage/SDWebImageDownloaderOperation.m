@@ -8,9 +8,9 @@
 
 #import "SDWebImageDownloaderOperation.h"
 #import "SDWebImageDecoder.h"
-#import "UIImage+MultiFormat.h"
 #import <ImageIO/ImageIO.h>
 #import "SDWebImageManager.h"
+#import "UIImage+MultiFormat.h"
 
 @interface SDWebImageDownloaderOperation () <NSURLConnectionDataDelegate>
 
@@ -97,15 +97,15 @@
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
 
-        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_5_1) {
-            // Make sure to run the runloop in our background thread so it can process downloaded data
-            // Note: we use a timeout to work around an issue with NSURLConnection cancel under iOS 5
-            //       not waking up the runloop, leading to dead threads (see https://github.com/rs/SDWebImage/issues/466)
-            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 10, false);
-        }
-        else {
+//        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_5_1) {
+//            // Make sure to run the runloop in our background thread so it can process downloaded data
+//            // Note: we use a timeout to work around an issue with NSURLConnection cancel under iOS 5
+//            //       not waking up the runloop, leading to dead threads (see https://github.com/rs/SDWebImage/issues/466)
+//            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 10, false);
+//        }
+//        else {
             CFRunLoopRun();
-        }
+//        }
 
         if (!self.isFinished) {
             [self.connection cancel];
@@ -286,7 +286,7 @@
 #endif
 
             if (partialImageRef) {
-                UIImage *image = [UIImage imageWithCGImage:partialImageRef scale:1 orientation:orientation];
+                NSImage *image = [[NSImage alloc] initWithCGImage:partialImageRef size:NSZeroSize]; // zero size means it'l take on the existing known size
                 NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
                 UIImage *scaledImage = [self scaledImageForKey:key image:image];
                 image = [UIImage decodedImageWithImage:scaledImage];
@@ -352,14 +352,14 @@
             completionBlock(nil, nil, nil, YES);
         }
         else {
-            UIImage *image = [UIImage sd_imageWithData:self.imageData];
+            NSImage *image = [NSImage sd_imageWithData:self.imageData];
             NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
             image = [self scaledImageForKey:key image:image];
             
             // Do not force decoding animated GIFs
-            if (!image.images) {
+//            if (!image.images) {
                 image = [UIImage decodedImageWithImage:image];
-            }
+//            }
             if (CGSizeEqualToSize(image.size, CGSizeZero)) {
                 completionBlock(nil, nil, [NSError errorWithDomain:@"SDWebImageErrorDomain" code:0 userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image has 0 pixels"}], YES);
             }
