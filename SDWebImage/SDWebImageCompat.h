@@ -17,8 +17,13 @@
 #ifndef UIImage
 #define UIImage NSImage
 #endif
+
 #ifndef UIImageView
 #define UIImageView NSImageView
+#endif
+
+#ifndef UIView
+#define UIView NSView
 #endif
 
 #ifndef NS_ENUM
